@@ -1,70 +1,92 @@
-# 🧠 Teaching Gemma to Reason  
-## Supervised Fine-Tuning of Gemma-3-1B using Tunix on TPU
+# 🧠 Gemma, Trained to Think  
+### Reasoning-First Supervised Fine-Tuning on TPU using Tunix
 
-> **Goal:** Train a compact open-weight LLM to *reason before answering* using structured supervision, not just predict tokens.
+> **Not bigger models. Better thinking.**
 
----
-
-## 📌 Project Overview
-
-Large Language Models often produce correct answers without transparent reasoning.  
-This project focuses on **explicit reasoning alignment** by fine-tuning **Gemma-3-1B** using **Supervised Fine-Tuning (SFT)** with **Tunix** on **TPU** infrastructure.
-
-Instead of optimizing for final answers alone, the model is trained on a strict format:
-
-
-This encourages:
-- Stable reasoning behavior  
-- Better interpretability  
-- More predictable outputs  
+This repository documents a **reasoning-centric fine-tuning experiment** where **Gemma-3-1B** is trained to *internalize step-by-step logic* through **structured supervision**, executed efficiently on **TPU** using **Tunix**.
 
 ---
 
-## 🚀 Why This Project Matters
+## 🔬 Core Idea
 
-Most open-source fine-tuning tutorials:
-- Skip reasoning supervision  
-- Jump directly to RL  
-- Ignore training stability  
+Most LLM fine-tuning pipelines optimize for:
+- Output fluency  
+- Answer accuracy  
+- Instruction following  
 
-**My opinion:**  
-> Reinforcement Learning cannot fix weak reasoning foundations.  
-> Strong reasoning must be *taught*, not *rewarded later*.
+This project optimizes for something more fundamental:
 
-This project builds that foundation correctly.
+> **Cognitive structure.**
 
----
+The model is trained to:
+1. Pause  
+2. Reason  
+3. Answer  
 
-## 🧠 Model Details
-
-| Component | Description |
-|---------|------------|
-| Base Model | Gemma-3-1B (open-weight) |
-| Training Method | Supervised Fine-Tuning (SFT) |
-| Framework | Tunix |
-| Hardware | TPU |
-| Task Focus | Mathematical & logical reasoning |
-| Output Style | Explain-then-answer |
+This is enforced **during training**, not patched later with reinforcement learning.
 
 ---
 
-## 📂 Dataset
+## 🧠 Why Reasoning-First Matters
 
-- Primary dataset: **GSM8K**
-- Each sample is reformatted into:
-  - `question`
-  - `reasoning`
-  - `final_answer`
+In many RL-aligned systems:
+- Reasoning is emergent  
+- Errors are masked by reward shaping  
+- Failures are hard to diagnose  
 
-### Example Training Format
+**Opinionated take:**  
+> RL refines behavior.  
+> SFT defines thinking.
+
+This repository focuses entirely on **defining how the model thinks**.
+
+---
+
+## 🧩 Model & Stack
+
+| Layer | Choice | Reason |
+|------|------|-------|
+| Base Model | Gemma-3-1B | Small, fast, transparent |
+| Training Paradigm | Supervised Fine-Tuning | Stable reasoning acquisition |
+| Framework | Tunix | TPU-native, scalable |
+| Compute | TPU (JAX) | High-throughput, low-latency |
+| Objective | Reasoning Alignment | Not just accuracy |
+
+---
+
+## 📘 Dataset Philosophy
+
+Instead of raw Q&A, each sample encodes **explicit cognition**.
+
+### Training Schema
 
 ```text
+<QUESTION>
+<DELIBERATE REASONING>
+<FINAL ANSWER>
+
+
 Question:
-If a train travels 60 km in 1 hour, how long will it take to travel 180 km?
+A shopkeeper sells an item for ₹240 after a 20% discount. What was the original price?
 
 Reasoning:
-The speed is 60 km per hour. To travel 180 km, divide 180 by 60.
-180 ÷ 60 = 3.
+A 20% discount means the selling price is 80% of the original.
+Let the original price be x.
+0.8x = 240
+x = 240 / 0.8 = 300
 
 Answer:
-3 hours
+₹300
+
+
+Raw Reasoning Data
+        ↓
+Normalization & Structural Enforcement
+        ↓
+Tokenizer Alignment
+        ↓
+TPU Mesh Configuration
+        ↓
+SFT with Tunix
+        ↓
+Reasoning-Aware Evaluation
